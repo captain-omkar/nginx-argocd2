@@ -1,13 +1,12 @@
-# nginx-service.yaml
-apiVersion: v1
-kind: Service
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
 metadata:
-  name: nginx
+  name: hpa-rollout-example
 spec:
-  selector:
-    app: nginx
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
-  type: ClusterIP
+  maxReplicas: 20
+  minReplicas: 3
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: rollout-bluegreen
+  targetCPUUtilizationPercentage: 10
